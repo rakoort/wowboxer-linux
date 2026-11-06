@@ -9,6 +9,8 @@
     <AssemblyTitle>WoWBoxer</AssemblyTitle>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+    <!-- AVLN3001: MainWindow needs its settings (no parameterless constructor); only Avalonia's designer would load it bare. -->
+    <NoWarn>$(NoWarn);AVLN3001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
