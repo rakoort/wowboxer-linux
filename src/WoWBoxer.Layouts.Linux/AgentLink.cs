@@ -33,8 +33,6 @@ public static class AgentLink
     public const string AppInterface = "com.wowboxer.App1";
     /// <summary>The KWin script's plugin name.</summary>
     public const string ScriptName = "wowboxer-agent";
-    /// <summary>The KWin script WoWBoxer replaces (a hand-made multibox script); only detected and reported.</summary>
-    public const string OldScriptName = "wow-multibox";
     public const string PullShortcut = "wowboxer-agent-pull";
     /// <summary>The agent's shortcut that shows the app window (default Meta+Alt+W).</summary>
     public const string ShowShortcut = "wowboxer-show";
@@ -62,9 +60,6 @@ public static class AgentLink
 
     /// <summary>Why the link does not work (no session bus, KWin refused the script …), or null.</summary>
     public static string? Problem { get; private set; }
-
-    /// <summary>True if KWin also runs the old <c>wow-multibox</c> script (it would fight over the same windows).</summary>
-    public static bool OldScriptLoaded { get; private set; }
 
     /// <summary>The agent version that reported last ("" until it did).</summary>
     public static string AgentVersion => _state.AgentVersion;
@@ -148,7 +143,6 @@ public static class AgentLink
         Problem = null;
         try
         {
-            OldScriptLoaded = await IsScriptLoadedAsync(OldScriptName);
             await EnsureAgentAsync(cancel);
         }
         catch (DBusExceptionBase e)

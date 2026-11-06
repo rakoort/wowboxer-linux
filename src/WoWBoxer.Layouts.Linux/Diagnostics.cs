@@ -15,8 +15,6 @@ public static class Diagnostics
         log.Info($"Session: {Env("XDG_SESSION_TYPE")}   desktop {Env("XDG_CURRENT_DESKTOP")}   KWin {await KWinVersionAsync()}");
         log.Info($"KWin script: running {(AgentLink.AgentVersion is { Length: > 0 } v ? v : "no answer")}   shipped {(AgentLink.ExpectedAgentVersion is { Length: > 0 } e ? e : "missing")}   last report {(AgentLink.LastReport is { } at ? $"{(DateTime.UtcNow - at).TotalSeconds:0.0} s ago" : "never")}");
         if (AgentLink.Problem is { } problem) log.Warn($"Link to KWin: {problem}");
-        if (AgentLink.OldScriptLoaded)
-            log.Warn($"The KWin script \"{AgentLink.OldScriptName}\" is loaded too. It places WoW windows as well – turn it off in System Settings › Window Management › KWin Scripts.");
         log.Info($"Path: {Environment.ProcessPath}");
         plan.Describe(log);
 

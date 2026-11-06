@@ -149,7 +149,7 @@ KWin window id (UUID) to a stable `nint` for the life of the process.
 | `ClientLauncher`, `GameInstall`, `BattleNet` | `umu-run` in the game's Wine prefix (env as faugus-launcher: `WINEPREFIX`, `PROTONPATH`, `GAMEID=umu-default`, `PROTON_ENABLE_WAYLAND=0`, `WINE_SIMULATE_WRITECOPY=1`, `UMU_USE_STEAM=1`, `UMU_CONTAINER_NSENTER=1`), one client after the other |
 | `UiScaleFix` | Core's `UiScale`/`WowConfig` on the prefix's `WTF/Config.wtf`; running clients from `/proc` |
 | `WindowCapture` (PrintWindow) | KWin `org.kde.KWin.ScreenShot2 CaptureWindow` (needs `X-KDE-DBUS-Restricted-Interfaces` in the desktop file) |
-| `Diagnostics` | Linux facts: session type, KWin and agent versions, outputs, windows, WoW processes and prefixes, Config.wtf, the old `wow-multibox` KWin script if loaded |
+| `Diagnostics` | Linux facts: session type, KWin and agent versions, outputs, windows, WoW processes and prefixes, Config.wtf |
 | `Taskbar.AutoHides` | false (KWin's work area already leaves panels out) |
 | `Dpi`, `Sandbox` | `Dpi` not needed; `Sandbox` (demo/screenshot fake windows and monitors) ported as is |
 

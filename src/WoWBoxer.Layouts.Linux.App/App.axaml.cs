@@ -94,8 +94,6 @@ public partial class App : Application
         }
         if (Link == AgentLinkStart.Unavailable || AgentLink.Problem is not null)
             _main.ViewModel.Status.Warn(AgentLink.Problem ?? "WoWBoxer could not reach KWin: it needs a KDE Plasma 6 session.");
-        if (AgentLink.OldScriptLoaded)
-            _main.ViewModel.Status.Warn($"The KWin script \"{AgentLink.OldScriptName}\" is loaded too and also moves WoW windows. Turn it off in System Settings › Window Management › KWin Scripts before you press Start.");
 
         if (startProfile is not null) StartProfile(startProfile);
     }

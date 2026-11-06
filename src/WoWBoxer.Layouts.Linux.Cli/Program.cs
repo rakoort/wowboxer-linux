@@ -56,8 +56,6 @@ switch (await AgentLink.StartAsync())
         return 1;
 }
 if (AgentLink.Problem is { } problem && !options.Json) log.Warn(problem);
-if (AgentLink.OldScriptLoaded && !options.Json)
-    log.Warn($"The KWin script \"{AgentLink.OldScriptName}\" is loaded too and may move the same windows. Turn it off in System Settings › Window Management › KWin Scripts.");
 
 try
 {
