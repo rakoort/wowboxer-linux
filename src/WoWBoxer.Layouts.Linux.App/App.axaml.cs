@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -22,6 +23,7 @@ public partial class App : Application
     private IClassicDesktopStyleApplicationLifetime? _desktop;
     private TrayIcon? _tray;
     private MainWindow? _main;
+    private PosixSignalRegistration? _sigterm, _sigint;
 
     /// <summary>How the D-Bus link to the agent started (set by <see cref="Program"/>; null in demo mode).</summary>
     public static AgentLinkStart? Link { get; set; }
@@ -37,6 +39,9 @@ public partial class App : Application
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
         CommandManager.RequeryOnInput();
         desktop.Exit += (_, _) => OnExit();
+        // A logout or `kill` quits like the tray's Quit, so the agent is unloaded and the swap keys are cleared.
+        _sigterm = PosixSignalRegistration.Create(PosixSignal.SIGTERM, QuitOnSignal);
+        _sigint = PosixSignalRegistration.Create(PosixSignal.SIGINT, QuitOnSignal);
         var args = desktop.Args ?? [];
         // inside the main loop, so the first-run and What's new dialogs can wait for their answer
         Dispatcher.UIThread.Post(() =>
@@ -297,6 +302,13 @@ public partial class App : Application
 
     private void Shutdown(int code = 0) => _desktop?.Shutdown(code);
 
+    /// <summary>The process keeps running until the UI thread has quit (and run <see cref="OnExit"/>).</summary>
+    private void QuitOnSignal(PosixSignalContext context)
+    {
+        context.Cancel = true;
+        Dispatcher.UIThread.Post(() => Shutdown());
+    }
+
     private void OnExit()
     {
         _main?.ViewModel.Hover.OnAppExit();   // hover off on quit (unless Settings keeps it for the next start)
@@ -310,5 +322,7 @@ public partial class App : Application
         // thread: the UI thread waits here, so the D-Bus answers must not need it)
         if (Link == AgentLinkStart.Owner) Task.Run(AgentLink.StopAsync).Wait(TimeSpan.FromSeconds(3));
         Demo.End();
+        _sigterm?.Dispose();
+        _sigint?.Dispose();
     }
 }
