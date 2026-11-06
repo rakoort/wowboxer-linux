@@ -1,5 +1,10 @@
 # WoWBoxer
 
+> **This repository is the Linux port** (KDE Plasma 6, Wine/Proton clients): the same app on Avalonia, placing windows
+> through a KWin script it loads itself. Install with Nix (`nix run github:rakoort/wowboxer-linux`); how it is built
+> and what differs from Windows: [docs/linux/port-plan.md](docs/linux/port-plan.md). The rest of this README is
+> upstream's, for Windows.
+
 Free, open-source (MIT) Windows app for **manual** World of Warcraft multiboxing.
 It opens your WoW clients and places 1–10 game windows (two parties) in a layout you choose, on one monitor or several, and keeps
 them there. Guides, the rules and the downloads are on **[wowboxer.com](https://wowboxer.com/)**.
