@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The Linux counterpart of WoWBoxer.Layouts.Win32: finds and places WoW windows through the wowboxer-agent KWin
+       script (D-Bus), reads monitors from KWin, starts clients with umu-run, reads /proc. docs/linux/port-plan.md. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>WoWBoxer.Layouts.Linux</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The version Avalonia.FreeDesktop 12.1.5 is built against, so the app loads one copy. -->
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.94.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WoWBoxer.Layouts.Core\WoWBoxer.Layouts.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="WoWBoxer.Layouts.Linux.Tests" />
+  </ItemGroup>
+
+</Project>

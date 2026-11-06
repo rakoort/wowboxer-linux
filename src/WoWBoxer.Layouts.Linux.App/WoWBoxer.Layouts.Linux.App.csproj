@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- WoWBoxer for Linux: the WPF app (src/WoWBoxer.Layouts.App) ported to Avalonia, over WoWBoxer.Layouts.Linux. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>WoWBoxer.Layouts.App</RootNamespace>
+    <AssemblyName>wowboxer</AssemblyName>
+    <AssemblyTitle>WoWBoxer</AssemblyTitle>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.5" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.5" />
+  </ItemGroup>
+
+  <!-- The upstream app's fonts and icons, used in place (one copy in the repo). -->
+  <ItemGroup>
+    <AvaloniaResource Include="..\WoWBoxer.Layouts.App\Assets\Fonts\*.ttf" Link="Assets\Fonts\%(Filename)%(Extension)" />
+    <AvaloniaResource Include="..\WoWBoxer.Layouts.App\Assets\app.png" Link="Assets\app.png" />
+    <AvaloniaResource Include="..\WoWBoxer.Layouts.App\Assets\splash.png" Link="Assets\splash.png" />
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WoWBoxer.Layouts.Core\WoWBoxer.Layouts.Core.csproj" />
+    <ProjectReference Include="..\WoWBoxer.Layouts.Linux\WoWBoxer.Layouts.Linux.csproj" />
+  </ItemGroup>
+
+</Project>

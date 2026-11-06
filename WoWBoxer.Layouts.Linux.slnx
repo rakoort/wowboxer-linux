@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WoWBoxer.Layouts.Core/WoWBoxer.Layouts.Core.csproj" />
+    <Project Path="src/WoWBoxer.Layouts.Linux/WoWBoxer.Layouts.Linux.csproj" />
+    <Project Path="src/WoWBoxer.Layouts.Linux.App/WoWBoxer.Layouts.Linux.App.csproj" />
+    <Project Path="src/WoWBoxer.Layouts.Linux.Cli/WoWBoxer.Layouts.Linux.Cli.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WoWBoxer.Layouts.Core.Tests/WoWBoxer.Layouts.Core.Tests.csproj" />
+    <Project Path="tests/WoWBoxer.Layouts.Linux.Tests/WoWBoxer.Layouts.Linux.Tests.csproj" />
+  </Folder>
+</Solution>
