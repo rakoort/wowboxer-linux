@@ -10,6 +10,11 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
+      # For a NixOS or home-manager config on its own nixpkgs: pkgs.wowboxer.
+      overlays.default = final: prev: {
+        wowboxer = final.callPackage ./nix/package.nix { };
+      };
+
       packages.${system} = {
         wowboxer = pkgs.callPackage ./nix/package.nix { };
         default = self.packages.${system}.wowboxer;
