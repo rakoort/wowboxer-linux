@@ -21,8 +21,8 @@ public sealed record WindowInfo(nint Handle, uint Pid, string ProcessName, strin
 /// <summary>
 /// Finds World of Warcraft windows among the windows the agent reports. A window is a WoW client when its process is a
 /// <c>Wow*.exe</c> (Wine shows the Windows path in /proc) or a game exe inside a "World of Warcraft" folder.
-/// <c>WBX_FAKE_WOW=&lt;caption prefix&gt;</c> makes windows whose caption starts with it count as Forever clients
-/// (development without the game, like upstream's tools/fakewow).
+/// <c>WBX_FAKE_WOW=&lt;caption prefix&gt;</c> makes windows whose caption starts with it count as Forever clients, and
+/// only those: real clients are then ignored, so a test run never moves the game (like upstream's tools/fakewow).
 /// </summary>
 public static class WindowFinder
 {
@@ -65,7 +65,7 @@ public static class WindowFinder
         {
             if (w.Pid == self || w.Pid <= 0) continue;   // never our own windows (app, Identify overlays)
             var isFake = fake is { Length: > 0 } && w.Caption.StartsWith(fake, StringComparison.Ordinal);
-            if (!isFake && ProcessInfo.Inspect(w.Pid) is not { IsWow: true }) continue;
+            if (fake is { Length: > 0 } ? !isFake : ProcessInfo.Inspect(w.Pid) is not { IsWow: true }) continue;
             var info = Describe(w, isFake);
             if (info.Rect.Width < MinWidth || info.Rect.Height < MinHeight) continue;
             if (game is { } g && info.Game != g) continue;
