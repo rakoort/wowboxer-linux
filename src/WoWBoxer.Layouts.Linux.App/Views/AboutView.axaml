@@ -1,0 +1,46 @@
+<UserControl x:Class="WoWBoxer.Layouts.App.Views.AboutView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:WoWBoxer.Layouts.App.ViewModels"
+             xmlns:v="using:WoWBoxer.Layouts.App.Views"
+             x:DataType="vm:MainViewModel">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ContentControl Theme="{StaticResource OrnatePanel}" Padding="40,32" MaxWidth="760" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0">
+            <StackPanel>
+                <Image Source="/Assets/app.png" Width="96" Height="96" HorizontalAlignment="Center" RenderOptions.BitmapInterpolationMode="HighQuality" />
+                <TextBlock HorizontalAlignment="Center" Margin="0,14,0,0" FontFamily="{StaticResource DisplayFont}" FontSize="34" Foreground="{StaticResource ParchmentBrush}" Effect="{StaticResource HardTextShadow}">
+                    <Run Text="WoW" /><Run Text="Boxer" Foreground="{StaticResource GoldHiBrush}" />
+                </TextBlock>
+                <TextBlock HorizontalAlignment="Center" Margin="0,8,0,0" Foreground="{StaticResource MutedBrush}">
+                    <Run Text="Version" /><Run Text=" " /><Run Text="{Binding Version, Mode=OneWay}" />
+                </TextBlock>
+                <ContentControl Theme="{StaticResource Divider}" Margin="80,20" />
+
+                <TextBlock Theme="{StaticResource Body}" TextAlignment="Center"
+                           Text="Free and open source for manual World of Warcraft multiboxing. It starts Battle.net and places your game windows where you want them – and nothing else." />
+
+                <Grid Margin="0,22,0,0" ColumnDefinitions="*,24,*">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" FontSize="14" Text="Licence" />
+                        <TextBlock Theme="{StaticResource Body}" Margin="0,6,0,0" Text="MIT licence. Use it, share it, change it." />
+                        <TextBlock Theme="{StaticResource H2}" FontSize="14" Text="Privacy" Margin="0,16,0,0" />
+                        <TextBlock Theme="{StaticResource Body}" Margin="0,6,0,0" Text="No telemetry and no accounts. Layouts, settings and logs stay on your PC. No network calls: updates come with your system." />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Theme="{StaticResource H2}" FontSize="14" Text="Credits" />
+                        <TextBlock Theme="{StaticResource Body}" Margin="0,6,0,0" Text="Cinzel typeface – The Cinzel Project Authors, SIL Open Font License 1.1." />
+                        <TextBlock Theme="{StaticResource Body}" Margin="0,4,0,0" Text="Inter typeface – The Inter Project Authors, SIL Open Font License 1.1." />
+                        <TextBlock Theme="{StaticResource Body}" Margin="0,4,0,0" Text=".NET – Microsoft, MIT. Avalonia – MIT." />
+                        <TextBlock Theme="{StaticResource Body}" Margin="0,4,0,0" Text="Art, icons and ornaments are our own." />
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Theme="{StaticResource Body}" Margin="0,26,0,8" TextAlignment="Center" Text="Join the WoWBoxer Discord – tips, layouts and help." />
+                <v:CommunityBar HorizontalAlignment="Center" IconSize="22" ShowLabels="True" />
+
+                <TextBlock Theme="{StaticResource Muted}" Margin="0,26,0,0" TextAlignment="Center" FontSize="11"
+                           Text="World of Warcraft® is a trademark of Blizzard Entertainment, Inc. This project is not affiliated with or endorsed by Blizzard." />
+            </StackPanel>
+        </ContentControl>
+    </ScrollViewer>
+</UserControl>

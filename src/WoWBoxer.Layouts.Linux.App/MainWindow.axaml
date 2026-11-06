@@ -1,0 +1,201 @@
+<Window x:Class="WoWBoxer.Layouts.App.MainWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="using:WoWBoxer.Layouts.App"
+        xmlns:v="using:WoWBoxer.Layouts.App.Views"
+        xmlns:vm="using:WoWBoxer.Layouts.App.ViewModels"
+        x:DataType="vm:MainViewModel"
+        Title="{Binding WindowTitle, Mode=OneWay}" Width="1440" Height="900" MinWidth="1120" MinHeight="700"
+        WindowStartupLocation="CenterScreen" Icon="/Assets/app.png"
+        WindowDecorations="None"
+        Background="{StaticResource NightBrush}" Foreground="{StaticResource TextBrush}"
+        FontFamily="{StaticResource BodyFont}" FontSize="13.5">
+    <!-- Custom chrome like upstream's WindowChrome: no system title bar; the 56 px header drags the window, the frame's
+         outer 6 px resize it (code-behind), the caption buttons sit top right. -->
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+Z" Command="{Binding UndoCommand}" />
+        <KeyBinding Gesture="Ctrl+Y" Command="{Binding RedoCommand}" />
+        <KeyBinding Gesture="Ctrl+Shift+Z" Command="{Binding RedoCommand}" />
+        <!-- Same size: not Alt+Z – the NVIDIA overlay takes Alt+Z on every PC that has it -->
+        <KeyBinding Gesture="Ctrl+Shift+M" Command="{Binding SameSizeCommand}" />
+        <KeyBinding Gesture="Ctrl+D1" Command="{Binding SetTabCommand}" CommandParameter="Setup" />
+        <KeyBinding Gesture="Ctrl+D2" Command="{Binding SetTabCommand}" CommandParameter="Guide" />
+        <KeyBinding Gesture="Ctrl+D3" Command="{Binding SetTabCommand}" CommandParameter="Settings" />
+        <KeyBinding Gesture="Ctrl+D4" Command="{Binding SetTabCommand}" CommandParameter="Help" />
+        <KeyBinding Gesture="Ctrl+D5" Command="{Binding SetTabCommand}" CommandParameter="About" />
+        <KeyBinding Gesture="F1" Command="{Binding SetTabCommand}" CommandParameter="Help" />
+        <KeyBinding Gesture="F5" Command="{Binding ArrangeCommand}" />
+        <KeyBinding Gesture="Ctrl+I" Command="{Binding IdentifyCommand}" />
+        <KeyBinding Gesture="Ctrl+Enter" Command="{Binding PrimaryCommand}" />
+        <KeyBinding Gesture="Ctrl+OemPlus" Command="{Binding MoreClientsCommand}" />
+        <KeyBinding Gesture="Ctrl+OemMinus" Command="{Binding FewerClientsCommand}" />
+    </Window.KeyBindings>
+
+    <Window.Styles>
+        <!-- squad status: green = all connected, pulsing gold = awaiting clients, amber = a window left its slot, grey = paused -->
+        <Style Selector="Ellipse#StatusDot">
+            <Setter Property="Fill" Value="{StaticResource OkBrush}" />
+        </Style>
+        <Style Selector="Ellipse#StatusDot.Awaiting">
+            <Setter Property="Fill" Value="{StaticResource GoldHiBrush}" />
+            <Style.Animations>
+                <Animation Duration="0:0:1.8" IterationCount="INFINITE">
+                    <KeyFrame Cue="0%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+                    <KeyFrame Cue="50%"><Setter Property="Opacity" Value="0.25" /></KeyFrame>
+                    <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <Style Selector="Ellipse#StatusDot.Moved"><Setter Property="Fill" Value="{StaticResource WarnBrush}" /></Style>
+        <Style Selector="Ellipse#StatusDot.Paused"><Setter Property="Fill" Value="{StaticResource MutedBrush}" /></Style>
+    </Window.Styles>
+
+    <Border x:Name="Frame" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
+        <Panel>
+            <!-- war-table background -->
+            <Canvas ClipToBounds="True"><Rectangle Width="2400" Height="1600" Fill="{StaticResource WarTableBrush}" /></Canvas>
+            <Rectangle Fill="{StaticResource MapGridBrush}" />
+
+            <Grid RowDefinitions="56,*,30">
+                <!-- ===== Title bar: brand, tabs, caption buttons ===== -->
+                <Border Grid.Row="0" x:Name="TitleBar" PointerPressed="OnTitleBarPressed">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"><GradientStop Color="#F70B0E14" Offset="0" /><GradientStop Color="#E00B0E14" Offset="1" /></LinearGradientBrush>
+                    </Border.Background>
+                    <Panel>
+                        <Rectangle Height="1" VerticalAlignment="Bottom" Fill="{StaticResource GoldGlint}" Opacity="0.6" />
+                        <DockPanel LastChildFill="True">
+                            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="16,0,26,0" VerticalAlignment="Center">
+                                <Viewbox Width="30" Height="34" Margin="0,0,10,0">
+                                    <Canvas Width="34" Height="38">
+                                        <Path Data="M17 1.5l14.5 5v12.2c0 9.3-6.3 15.8-14.5 18.3C8.8 34.5 2.5 28 2.5 18.7V6.5z" Stroke="{StaticResource GoldGradient}" StrokeThickness="2">
+                                            <Path.Fill><LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"><GradientStop Color="#232B3E" Offset="0" /><GradientStop Color="#0B0E14" Offset="1" /></LinearGradientBrush></Path.Fill>
+                                        </Path>
+                                        <Rectangle Canvas.Left="8" Canvas.Top="10.5" Width="10" Height="15" RadiusX="1.2" RadiusY="1.2" Fill="{StaticResource GoldGradient}" />
+                                        <Rectangle Canvas.Left="19.5" Canvas.Top="10.5" Width="6.5" Height="7" RadiusX="1" RadiusY="1" Fill="#BFE8C66A" />
+                                        <Rectangle Canvas.Left="19.5" Canvas.Top="18.5" Width="6.5" Height="7" RadiusX="1" RadiusY="1" Fill="#BFE8C66A" />
+                                        <Path Data="M11 30.5h12" Stroke="{StaticResource GoldBrush}" StrokeThickness="1.6" StrokeLineCap="Round" />
+                                    </Canvas>
+                                </Viewbox>
+                                <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource DisplayFont}" FontSize="21" Foreground="{StaticResource ParchmentBrush}" Effect="{StaticResource HardTextShadow}">
+                                    <Run Text="WoW" /><Run Text="Boxer" Foreground="{StaticResource GoldHiBrush}" />
+                                </TextBlock>
+                                <TextBlock Text="{Binding Version, StringFormat='v{0}', Mode=OneWay}" VerticalAlignment="Center" Margin="8,3,0,0" FontSize="11" Foreground="{StaticResource GoldBrush}" Opacity="0.85"
+                                           AutomationProperties.AutomationId="TitleVersion" ToolTip.Tip="Installed version – see About for what changed" />
+                                <!-- local dev build: never mistaken for the normal app -->
+                                <Border IsVisible="{Binding IsDevBuild, Mode=OneWay, Converter={x:Static app:BoolVisibility.Instance}}" Background="#2BB5A8" CornerRadius="3"
+                                        Padding="6,1,6,1" Margin="10,3,0,0" VerticalAlignment="Center" AutomationProperties.AutomationId="DevBadge"
+                                        ToolTip.Tip="WoWBoxer Dev – a local test build with its own settings and layouts. It does not update itself.">
+                                    <TextBlock Text="DEV" FontSize="11" FontWeight="Bold" Foreground="#0B0E14" />
+                                </Border>
+                            </StackPanel>
+
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                                <Button Theme="{StaticResource CaptionButton}" Click="OnMinimize" ToolTip.Tip="Minimise to the tray">
+                                    <Path Data="M0,0 H10" Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="1.2" />
+                                </Button>
+                                <Button Theme="{StaticResource CaptionButton}" Click="OnMaximize" ToolTip.Tip="Maximise / restore">
+                                    <Rectangle Width="10" Height="10" Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="1.2" />
+                                </Button>
+                                <Button Theme="{StaticResource CloseCaptionButton}" Click="OnClose" ToolTip.Tip="Quit">
+                                    <Path Data="M0,0 L10,10 M10,0 L0,10" Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="1.2" />
+                                </Button>
+                            </StackPanel>
+
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,18,0" Background="Transparent"
+                                        ToolTip.Tip="Started: the app puts each WoW window of the squad in its slot. Stopped: it leaves every window alone. Start and Stop are at the bottom right and in the tray menu.">
+                                <Ellipse x:Name="StatusDot" Width="8" Height="8" Margin="0,0,8,0"
+                                         Classes.Awaiting="{Binding SquadState, Converter={x:Static app:EqualsConverter.Instance}, ConverterParameter=Awaiting}"
+                                         Classes.Moved="{Binding SquadState, Converter={x:Static app:EqualsConverter.Instance}, ConverterParameter=Moved}"
+                                         Classes.Paused="{Binding SquadState, Converter={x:Static app:EqualsConverter.Instance}, ConverterParameter=Paused}" />
+                                <TextBlock Text="{Binding HeaderStatus}" Foreground="{StaticResource TextBrush}" FontSize="12.5" AutomationProperties.AutomationId="HeaderStatus" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <RadioButton Theme="{StaticResource NavTab}" Content="SETUP" GroupName="nav"
+                                             IsChecked="{Binding SelectedTab, Converter={x:Static app:EqualsConverter.Instance}, ConverterParameter=Setup}"
+                                             ToolTip.Tip="Clients, layout, your squad and Start squad – all on one screen (Ctrl+1)" />
+                                <RadioButton Theme="{StaticResource NavTab}" Content="GUIDE" GroupName="nav"
+                                             IsChecked="{Binding SelectedTab, Converter={x:Static app:EqualsConverter.Instance}, ConverterParameter=Guide}"
+                                             ToolTip.Tip="Quick guide: WoW settings and tips (Ctrl+2)" />
+                                <RadioButton Theme="{StaticResource NavTab}" Content="SETTINGS" GroupName="nav"
+                                             IsChecked="{Binding SelectedTab, Converter={x:Static app:EqualsConverter.Instance}, ConverterParameter=Settings}"
+                                             ToolTip.Tip="Game, windows, Battle.net, updates (Ctrl+3)" />
+                                <RadioButton Theme="{StaticResource NavTab}" Content="HELP" GroupName="nav"
+                                             IsChecked="{Binding SelectedTab, Converter={x:Static app:EqualsConverter.Instance}, ConverterParameter=Help}"
+                                             ToolTip.Tip="Troubleshooting, Report a problem, Discord (Ctrl+4 or F1)" />
+                                <RadioButton Theme="{StaticResource NavTab}" Content="ABOUT" GroupName="nav"
+                                             IsChecked="{Binding SelectedTab, Converter={x:Static app:EqualsConverter.Instance}, ConverterParameter=About}"
+                                             ToolTip.Tip="Version, licence, privacy (Ctrl+5)" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Panel>
+                </Border>
+
+                <!-- ===== Pages ===== -->
+                <Panel Grid.Row="1" x:Name="Pages" Margin="20,16,20,10">
+                    <v:SetupView x:Name="SetupPage" IsVisible="{Binding SelectedTab, Converter={x:Static app:TabVisibility.Instance}, ConverterParameter=Setup}" />
+                    <v:GuideView IsVisible="{Binding SelectedTab, Converter={x:Static app:TabVisibility.Instance}, ConverterParameter=Guide}" />
+                    <v:SettingsView IsVisible="{Binding SelectedTab, Converter={x:Static app:TabVisibility.Instance}, ConverterParameter=Settings}" />
+                    <v:HelpView IsVisible="{Binding SelectedTab, Converter={x:Static app:TabVisibility.Instance}, ConverterParameter=Help}" />
+                    <v:AboutView IsVisible="{Binding SelectedTab, Converter={x:Static app:TabVisibility.Instance}, ConverterParameter=About}" />
+                </Panel>
+
+                <!-- ===== Status bar: the last activity line; click it for the whole activity log ===== -->
+                <Border Grid.Row="2" Background="#CC07090E" BorderBrush="{StaticResource LineSoftBrush}" BorderThickness="0,1,0,0">
+                    <DockPanel Margin="16,0">
+                        <TextBlock DockPanel.Dock="Right" Text="{Binding MonitorSummary}" Foreground="{StaticResource MutedBrush}" FontSize="11.5" VerticalAlignment="Center" />
+                        <!-- community links: small and always there, never a pop-up -->
+                        <v:CommunityBar DockPanel.Dock="Right" Margin="0,0,18,0" IconSize="15" />
+                        <!-- not clickable while open: a click outside closes the popup, and must not open it again at once -->
+                        <ToggleButton x:Name="ActivityToggle" Cursor="Hand" Background="Transparent" BorderThickness="0" Focusable="True" HorizontalAlignment="Left"
+                                      IsHitTestVisible="{Binding !#ActivityPopup.IsOpen}"
+                                      AutomationProperties.Name="Activity" ToolTip.Tip="Show the activity log">
+                            <ToggleButton.Template>
+                                <ControlTemplate>
+                                    <Border Background="Transparent"><ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" VerticalAlignment="Center" /></Border>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="7" Height="7" Margin="0,0,8,0" VerticalAlignment="Center" Fill="{Binding LastStatus.Brush, FallbackValue=Gray}" />
+                                <TextBlock Text="{Binding LastStatus.Message, FallbackValue=Ready}" Foreground="{StaticResource TextBrush}" FontSize="12" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="900" />
+                                <TextBlock Text="  ·  Activity ▴" Foreground="{StaticResource GoldBrush}" FontSize="11.5" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ToggleButton>
+                    </DockPanel>
+                </Border>
+                <Popup x:Name="ActivityPopup" Grid.Row="2" PlacementTarget="{Binding #ActivityToggle}" Placement="AnchorAndGravity" PlacementAnchor="TopLeft" PlacementGravity="TopRight"
+                       IsLightDismissEnabled="True" VerticalOffset="-6" Closed="OnActivityClosed">
+                    <Border Width="760" Height="320" CornerRadius="6" BorderThickness="1" BorderBrush="#8E8E8E" Padding="12,8">
+                        <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"><GradientStop Color="#F00C0F1E" Offset="0" /><GradientStop Color="#F0060812" Offset="1" /></LinearGradientBrush></Border.Background>
+                        <DockPanel>
+                            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
+                                <Button DockPanel.Dock="Right" Theme="{StaticResource LinkButton}" Content="Open logs" Command="{Binding OpenLogsCommand}" />
+                                <TextBlock Text="Activity" Foreground="{StaticResource UiGoldBrush}" FontWeight="SemiBold" />
+                            </DockPanel>
+                            <ListBox x:Name="StatusList" ItemsSource="{Binding Status.Lines}" FontFamily="{StaticResource MonoFont}" FontSize="11" Background="Transparent" BorderThickness="0"
+                                     AutomationProperties.Name="Activity log" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemContainerTheme>
+                                    <ControlTheme TargetType="ListBoxItem">
+                                        <Setter Property="Template">
+                                            <ControlTemplate>
+                                                <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0,1" />
+                                            </ControlTemplate>
+                                        </Setter>
+                                    </ControlTheme>
+                                </ListBox.ItemContainerTheme>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:StatusLine">
+                                        <TextBlock TextWrapping="Wrap" Foreground="{Binding Brush}">
+                                            <Run Text="{Binding TimeText, Mode=OneWay}" Foreground="#6B6F7A" /><Run Text=" " /><Run Text="{Binding Message, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Panel>
+    </Border>
+</Window>

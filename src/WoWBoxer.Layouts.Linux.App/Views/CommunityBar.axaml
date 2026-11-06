@@ -1,0 +1,76 @@
+<UserControl x:Class="WoWBoxer.Layouts.App.Views.CommunityBar"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="using:WoWBoxer.Layouts.App.Views"
+             xmlns:vm="using:WoWBoxer.Layouts.App.ViewModels"
+             x:DataType="vm:MainViewModel" x:Name="Root">
+    <!-- Small, permanent community links in the brand style: Discord, YouTube, the website. Never a pop-up or a badge.
+         The URLs come from Community.Links (compiled in). DataContext = MainViewModel. -->
+    <UserControl.Resources>
+        <ControlTheme x:Key="IconLink" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="4,0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+            <Setter Property="ToolTip.ShowDelay" Value="200" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="3">
+                        <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Opacity="0.75" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="#26E8C66A" />
+                <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Opacity" Value="1" /></Style>
+            </Style>
+        </ControlTheme>
+        <ControlTheme x:Key="IconLabel" TargetType="TextBlock">
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource ParchmentBrush}" />
+            <Setter Property="FontSize" Value="13" />
+        </ControlTheme>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <Button Theme="{StaticResource IconLink}" Command="{Binding OpenDiscordCommand}" AutomationProperties.Name="Discord" AutomationProperties.AutomationId="LinkDiscord"
+                ToolTip.Tip="Join the WoWBoxer Discord – tips, layouts and help">
+            <StackPanel Orientation="Horizontal">
+                <Viewbox Width="{Binding #Root.IconSize}" Height="{Binding #Root.IconSize}">
+                    <Canvas Width="24" Height="24">
+                        <Path Fill="{StaticResource GoldHiBrush}"
+                              Data="M5,6 C8,4.4 16,4.4 19,6 C21,9.5 22,13 21.5,17 C19.5,18.6 17.6,19.4 16,19.8 L15,18 C16,17.6 17,17.1 17.8,16.5 C14,18.3 10,18.3 6.2,16.5 C7,17.1 8,17.6 9,18 L8,19.8 C6.4,19.4 4.5,18.6 2.5,17 C2,13 3,9.5 5,6 Z" />
+                        <Ellipse Canvas.Left="7.2" Canvas.Top="10.4" Width="3.2" Height="3.6" Fill="#0B0E14" />
+                        <Ellipse Canvas.Left="13.6" Canvas.Top="10.4" Width="3.2" Height="3.6" Fill="#0B0E14" />
+                    </Canvas>
+                </Viewbox>
+                <TextBlock Theme="{StaticResource IconLabel}" Text="Discord" IsVisible="{Binding #Root.ShowLabels}" />
+            </StackPanel>
+        </Button>
+        <Button Theme="{StaticResource IconLink}" Command="{Binding OpenYouTubeCommand}" AutomationProperties.Name="YouTube" AutomationProperties.AutomationId="LinkYouTube"
+                ToolTip.Tip="WoWBoxer on YouTube – guides and setups">
+            <StackPanel Orientation="Horizontal">
+                <Viewbox Width="{Binding #Root.IconSize}" Height="{Binding #Root.IconSize}">
+                    <Canvas Width="24" Height="24">
+                        <Rectangle Canvas.Left="2" Canvas.Top="5" Width="20" Height="14" RadiusX="4" RadiusY="4" Fill="{StaticResource GoldHiBrush}" />
+                        <Path Fill="#0B0E14" Data="M10,8.6 L15.6,12 L10,15.4 Z" />
+                    </Canvas>
+                </Viewbox>
+                <TextBlock Theme="{StaticResource IconLabel}" Text="YouTube" IsVisible="{Binding #Root.ShowLabels}" />
+            </StackPanel>
+        </Button>
+        <Button Theme="{StaticResource IconLink}" Command="{Binding OpenWebsiteCommand}" AutomationProperties.Name="Website" AutomationProperties.AutomationId="LinkWebsite"
+                ToolTip.Tip="wowboxer.com – guides, rules and downloads">
+            <StackPanel Orientation="Horizontal">
+                <Viewbox Width="{Binding #Root.IconSize}" Height="{Binding #Root.IconSize}">
+                    <!-- globe (upstream: Segoe Fluent Icons E774) -->
+                    <Canvas Width="24" Height="24">
+                        <Path Stroke="{StaticResource GoldHiBrush}" StrokeThickness="1.6"
+                              Data="M12,2.5 A9.5,9.5 0 1 0 12,21.5 A9.5,9.5 0 1 0 12,2.5 Z M12,2.5 C8.8,5.5 8.8,18.5 12,21.5 M12,2.5 C15.2,5.5 15.2,18.5 12,21.5 M2.5,12 H21.5 M4,7 H20 M4,17 H20" />
+                    </Canvas>
+                </Viewbox>
+                <TextBlock Theme="{StaticResource IconLabel}" Text="Website" IsVisible="{Binding #Root.ShowLabels}" />
+            </StackPanel>
+        </Button>
+    </StackPanel>
+</UserControl>

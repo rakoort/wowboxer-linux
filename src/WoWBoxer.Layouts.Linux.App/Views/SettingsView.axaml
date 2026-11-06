@@ -1,0 +1,276 @@
+<UserControl x:Class="WoWBoxer.Layouts.App.Views.SettingsView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="using:WoWBoxer.Layouts.App"
+             xmlns:vm="using:WoWBoxer.Layouts.App.ViewModels"
+             xmlns:core="using:WoWBoxer.Layouts.Core"
+             x:DataType="vm:MainViewModel">
+    <UserControl.Resources>
+        <ControlTheme x:Key="Setting" TargetType="CheckBox" BasedOn="{StaticResource Switch}">
+            <Setter Property="Margin" Value="0,12,0,0" />
+        </ControlTheme>
+        <ControlTheme x:Key="Explain" TargetType="TextBlock" BasedOn="{StaticResource Muted}">
+            <Setter Property="Margin" Value="0,3,60,0" />
+            <Setter Property="FontSize" Value="11.5" />
+        </ControlTheme>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid MaxWidth="1100" Margin="0,0,10,0" ColumnDefinitions="*,16,*">
+
+            <StackPanel>
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Window rules" />
+                        <TextBlock Theme="{StaticResource Explain}" Text="{Binding LayoutTitle, StringFormat='For the layout {0}.'}" />
+                        <TextBlock Theme="{StaticResource Muted}" FontSize="11.5" Margin="0,12,0,4" Text="Narrowest window shape" />
+                        <ComboBox ItemsSource="{Binding AspectChoices}" SelectedItem="{Binding SelectedAspect}" HorizontalAlignment="Left" MinWidth="300"
+                                  AutomationProperties.Name="Narrowest window shape"
+                                  ToolTip.Tip="Windows narrower than this are shortened (never stretched). With Auto-fit action bar on, 5:4 is fine." />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding CoverTaskbar}"><TextBlock Text="Cover the taskbar area" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="{Binding TaskbarHint}" />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding Borderless}"><TextBlock Text="Remove title bars" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="Off by default. On removes the frame KWin draws around the game window so the slot size is the game area; keep WoW on Windowed." />
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Action bar (UI Scale)" />
+                        <TextBlock Theme="{StaticResource Explain}" Text="{Binding UiScaleText}" AutomationProperties.AutomationId="UiScaleText" />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding AutoFitActionBar}" AutomationProperties.Name="Auto-fit action bar"><TextBlock Text="Auto-fit action bar" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="When all clients of the install are closed (at start, before opening clients, or when the last one closes), the app sets WoW's UI Scale so the whole action bar fits in every window. Only then: WoW shares one UI Scale per install and saves it when a client closes. A backup is kept." />
+                        <WrapPanel Margin="0,12,0,0">
+                            <Button Content="Fix action bar now" Command="{Binding FixUiScaleCommand}" Margin="0,0,8,8" AutomationProperties.AutomationId="FixUiScale"
+                                    ToolTip.Tip="Sets the UI Scale now (all clients closed), or tells you what to set in game" />
+                            <Button Content="UI Scale off" Command="{Binding ResetUiScaleCommand}" Margin="0,0,8,8"
+                                    ToolTip.Tip="Turns Use UI Scale off again (and Auto-fit). Only while all clients are closed." />
+                        </WrapPanel>
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Windows" />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding RenameWindows}"><TextBlock Text="Title WoW windows with the character names" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="The game windows become &quot;WoW - name&quot; on the taskbar, for windows with a character name." />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding Animations}"><TextBlock Text="Animations" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="Windows glide into place on the map, and waiting slots pulse. Turn off for a calmer screen." />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding StartPlacingOnOpen}" AutomationProperties.AutomationId="StartPlacingOnOpen"><TextBlock Text="Start placing windows when the app opens" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="Off (default): the app opens stopped and leaves every window alone – safe when you play another game or WoW version – until you press Start placing windows. Desktop layout shortcuts always start." />
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="WoW client" />
+                        <DockPanel Margin="0,12,0,0">
+                            <Button DockPanel.Dock="Right" Content="Browse…" Command="{Binding BrowseGameCommand}" Margin="8,0,0,0" />
+                            <TextBox Text="{Binding GameExe, UpdateSourceTrigger=LostFocus}" AutomationProperties.Name="WoW client"
+                                     ToolTip.Tip="Found automatically: the open clients' install, else the last one used" />
+                        </DockPanel>
+                        <TextBlock Theme="{StaticResource Explain}" Text="Every WoW install works (Classic Era, Forever, Retail …). The squad follows the install with the most open windows; this is the one &quot;Open WoW clients&quot;, UI Scale and the account hints use when none is open. The WTF folder is only read, except the UI Scale." />
+                        <TextBlock Theme="{StaticResource Muted}" FontSize="11.5" Margin="0,12,0,4" Text="Proton" />
+                        <TextBox Text="{Binding ProtonPath, UpdateSourceTrigger=LostFocus}" AutomationProperties.Name="Proton" AutomationProperties.AutomationId="ProtonPath"
+                                 ToolTip.Tip="The Proton folder umu-run starts the clients with. Empty: found automatically." />
+                        <TextBlock Theme="{StaticResource Explain}" Text="The clients start with umu-run in the game's Wine prefix, one after the other. Leave Proton empty unless the game needs a particular one." />
+                        <Button Content="Read accounts and characters again" Command="{Binding RefreshHintsCommand}" HorizontalAlignment="Left" Margin="0,12,0,0" />
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Battle.net" />
+                        <DockPanel Margin="0,12,0,0">
+                            <Button DockPanel.Dock="Right" Content="Browse…" Command="{Binding BrowseBattleNetCommand}" Margin="8,0,0,0" />
+                            <TextBox Text="{Binding BattleNetExe, UpdateSourceTrigger=LostFocus}" ToolTip.Tip="Found automatically; change it only if Battle.net lives somewhere unusual" />
+                        </DockPanel>
+                        <TextBlock Theme="{StaticResource Explain}" Text="&quot;Open Battle.net instead&quot; starts Battle.net Launcher.exe in the game's Wine prefix if it is not running." />
+                    </StackPanel>
+                </ContentControl>
+
+                <!-- Window swap (advanced, off by default). Only moves windows; the hotkeys are KWin shortcuts, never sent to the game. -->
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0" AutomationProperties.AutomationId="AdvancedPanel">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Advanced" />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding SwapHotkeysEnabled}" AutomationProperties.AutomationId="SwapHotkeys" AutomationProperties.Name="Window swap hotkeys">
+                            <TextBlock Text="Window swap hotkeys" />
+                        </CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="Hotkeys that move a client's window into the main slot; the client that was there takes its old place. Off by default." />
+                        <Border Theme="{StaticResource TipBox}" Margin="0,12,60,0">
+                            <!-- Avalonia has no Hyperlink inline: the text, then the link below it (as upstream's LineBreak) -->
+                            <StackPanel>
+                                <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="17" Foreground="#E4E4E4" Text="{Binding SwapNote, Mode=OneWay}" />
+                                <Button Theme="{StaticResource Hyperlink}" Command="{Binding OpenSwapGuideCommand}" FontSize="12" Content="Guide: Swap windows (advanced)" HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel IsVisible="{Binding SwapHotkeysEnabled, Converter={x:Static app:BoolVisibility.Instance}}">
+                            <TextBlock Text="{Binding SwapStatusText}" Foreground="{StaticResource OkBrush}" FontSize="12" Margin="0,12,0,0" AutomationProperties.AutomationId="SwapStatus" />
+                            <TextBlock Theme="{StaticResource Explain}" Text="Click a box and press the keys (Esc cancels). Two or more of Ctrl, Alt and Shift keep them away from your game keys. The key press goes to KWin, not to the game." />
+                            <ItemsControl ItemsSource="{Binding HotkeyRows}" Margin="0,8,0,0" AutomationProperties.AutomationId="HotkeyRows">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:HotkeyRow">
+                                        <StackPanel Margin="0,0,0,4">
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding Title}" Width="170" VerticalAlignment="Center" FontSize="12.5" />
+                                                <Button DockPanel.Dock="Right" Theme="{StaticResource LinkButton}" Content="Clear" Command="{Binding ClearCommand}" FontSize="11" Margin="8,0,0,0" VerticalAlignment="Center"
+                                                        ToolTip.Tip="No hotkey for this action" />
+                                                <Button DockPanel.Dock="Right" Theme="{StaticResource LinkButton}" Content="Default" Command="{Binding DefaultCommand}" FontSize="11" Margin="8,0,0,0" VerticalAlignment="Center"
+                                                        ToolTip.Tip="The recommended hotkey" />
+                                                <TextBox Text="{Binding Text, Mode=OneWay}" IsReadOnly="True" Cursor="Hand" FontSize="12" Padding="6,2" MinHeight="0"
+                                                         AutomationProperties.Name="{Binding Title}" ToolTip.Tip="Click, then press the keys"
+                                                         GotFocus="OnHotkeyBoxFocus" LostFocus="OnHotkeyBoxBlur" KeyDown="OnHotkeyBoxKey" />
+                                            </DockPanel>
+                                            <TextBlock Text="{Binding Notes}" Foreground="{StaticResource WarnBrush}" FontSize="11" TextWrapping="Wrap" Margin="170,1,0,0"
+                                                       IsVisible="{Binding HasNotes, Converter={x:Static app:BoolVisibility.Instance}}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Theme="{StaticResource LinkButton}" Content="All back to the recommended hotkeys" Command="{Binding ResetAllHotkeysCommand}" HorizontalAlignment="Left" Margin="0,4,0,0" FontSize="11.5" />
+                            <!-- edits only take effect with Apply (the owner's wish, 2026-11-02) -->
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" IsVisible="{Binding HasPendingHotkeys, Converter={x:Static app:BoolVisibility.Instance}}">
+                                <Button Content="Apply hotkeys" Command="{Binding ApplyHotkeyChangesCommand}" Padding="14,4" AutomationProperties.AutomationId="ApplyHotkeys"
+                                        ToolTip.Tip="Start using the hotkeys above (until then the old ones keep working)" />
+                                <Button Content="Discard" Command="{Binding DiscardHotkeyChangesCommand}" Padding="12,4" Margin="8,0,0,0" AutomationProperties.AutomationId="DiscardHotkeys"
+                                        ToolTip.Tip="Forget the changes and keep the hotkeys in use" />
+                                <TextBlock Text="Changes are not in use until you apply them." Foreground="{StaticResource WarnBrush}" FontSize="11.5" VerticalAlignment="Center" Margin="10,0,0,0" />
+                            </StackPanel>
+
+                            <TextBlock Theme="{StaticResource Muted}" FontSize="11.5" Margin="0,16,0,4" Text="Next / previous go through" />
+                            <ComboBox ItemsSource="{Binding SwapScopeChoices}" SelectedItem="{Binding SwapScope}" HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="Next and previous go through" />
+                            <TextBlock Theme="{StaticResource Explain}" Text="With 6–10 clients each party has its own main slot. &quot;The party of the active window&quot; cycles the party whose window has your keys." />
+
+                            <TextBlock Theme="{StaticResource Muted}" FontSize="11.5" Margin="0,14,0,4" Text="Order" />
+                            <ItemsControl ItemsSource="{Binding SwapOrderPresets}">
+                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="core:WindowSwap+OrderPreset">
+                                        <Button Content="{Binding Name}" Command="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).UseSwapOrderCommand}" CommandParameter="{Binding}"
+                                                Margin="0,0,8,8" Padding="10,3" FontSize="11.5" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding SwapOrderText}" FontSize="12" Foreground="{StaticResource ParchmentBrush}" TextWrapping="Wrap" AutomationProperties.AutomationId="SwapOrder" />
+                            <TextBlock Theme="{StaticResource Explain}" Text="Your own order: click the clients below in the order you want (a client can come back, e.g. 1, 3, 1, 4). Drag a chip in your order to move it; click it to remove it." />
+                            <ItemsControl x:Name="ChipList" ItemsSource="{Binding SwapOrderChips}" Margin="0,6,0,0">
+                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:OrderChip">
+                                        <Border Background="#33E8C66A" BorderBrush="{StaticResource GoldBrush}" BorderThickness="1" CornerRadius="10" Padding="8,2" Margin="0,0,6,6" Cursor="Hand"
+                                                ToolTip.Tip="Drag to move · click to remove"
+                                                PointerPressed="OnChipDown" PointerMoved="OnChipMove" PointerReleased="OnChipUp" PointerCaptureLost="OnChipCaptureLost">
+                                            <TextBlock Text="{Binding Label}" FontSize="11.5" Foreground="{StaticResource GoldHiBrush}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl ItemsSource="{Binding SwapOrderSource}" Margin="0,2,0,0">
+                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:OrderChip">
+                                        <Button Content="{Binding Label}" Command="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).AddToSwapOrderCommand}" CommandParameter="{Binding}"
+                                                Margin="0,0,6,6" Padding="8,2" FontSize="11" ToolTip.Tip="Add to your order" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Theme="{StaticResource LinkButton}" Content="Clear my order (number order)" Command="{Binding ClearSwapOrderCommand}" HorizontalAlignment="Left" FontSize="11.5" />
+
+                            <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding SwapRemember}" AutomationProperties.AutomationId="SwapRemember"><TextBlock Text="Remember swapped positions after a restart" /></CheckBox>
+                            <TextBlock Theme="{StaticResource Explain}" Text="Off: WoWBoxer always starts in the home layout." />
+                        </StackPanel>
+                    </StackPanel>
+                </ContentControl>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Tools" />
+                        <WrapPanel Margin="0,12,0,0">
+                            <Button Content="Identify all windows" Command="{Binding IdentifyCommand}" Margin="0,0,8,8" ToolTip.Tip="Show each window's number on top of it for a few seconds (Ctrl+I)" />
+                            <Button Content="Close clients I started" Command="{Binding CloseMineCommand}" Margin="0,0,8,8"
+                                    ToolTip.Tip="Closes only the login screens this app opened – never your own clients" />
+                            <Button Content="Give title bars back" Command="{Binding RestoreFramesCommand}" Margin="0,0,8,8"
+                                    ToolTip.Tip="Undo &quot;Remove title bars&quot; on every open WoW window" />
+                            <Button Content="Open layouts folder" Command="{Binding OpenLayoutsFolderCommand}" Margin="0,0,8,8" />
+                            <Button Content="Show welcome screen" Command="{Binding ShowFirstRunCommand}" Margin="0,0,8,8" />
+                        </WrapPanel>
+                        <TextBlock Theme="{StaticResource Explain}" Text="Something wrong? The Help tab has Report a problem, Diagnose, the logs and the common problems." />
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0">
+                    <StackPanel DataContext="{Binding Hover}" x:DataType="vm:HoverViewModel">
+                        <TextBlock Theme="{StaticResource H2}" Text="Switching windows" />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding Enabled}" AutomationProperties.AutomationId="HoverToggleSettings" AutomationProperties.Name="Hover to activate windows"><TextBlock Text="Hover to activate windows" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="While a WoW window is active, resting the mouse on another WoW window makes that one active, so your next key press goes there. WoWBoxer's KWin script does it, between WoW windows only – it never takes the focus from another app and never sends anything to the game." />
+                        <TextBlock Theme="{StaticResource Muted}" FontSize="11.5" Margin="0,12,0,0" Text="Delay" />
+                        <DockPanel Margin="0,2,60,0">
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding DelayText}" Width="120" Margin="10,0,0,0" Foreground="{StaticResource ParchmentBrush}" VerticalAlignment="Center" />
+                            <Slider Minimum="0" Maximum="500" Ticks="30" SmallChange="5" LargeChange="50" Value="{Binding DelayPreview}"
+                                    app:SliderCommit.Command="{Binding CommitDelayCommand}" AutomationProperties.AutomationId="HoverDelaySettings" AutomationProperties.Name="Hover delay in milliseconds" />
+                        </DockPanel>
+                        <DockPanel Margin="0,2,60,0">
+                            <Button DockPanel.Dock="Right" Content="Reset to default" Command="{Binding ResetDelayCommand}" AutomationProperties.AutomationId="HoverResetDelaySettings"
+                                    ToolTip.Tip="Sets the delay back to 30 ms, at once" />
+                            <TextBlock Text="{Binding DefaultDelayText}" FontSize="11.5" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" />
+                        </DockPanel>
+                        <TextBlock Theme="{StaticResource Explain}" Text="0–500 ms. Turning hover on sets 30 ms, the default (the mark): it stops windows from activating while the mouse just passes over them. Move the slider for faster or slower; it applies when you let go. Reset to default puts 30 ms back." />
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding BringToFront}"><TextBlock Text="Bring window to front when activated" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="Off keeps floating overlays visible: the active window stays where it is in the stack. Works best with &quot;Always on top&quot; (the pin in Your squad) on the floating followers." />
+                        <Border Theme="{StaticResource TipBox}" Margin="0,14,60,0">
+                            <StackPanel>
+                                <TextBlock TextWrapping="Wrap" FontSize="12" LineHeight="17" Foreground="#E4E4E4"
+                                           Text="Hover to activate is done by WoWBoxer's KWin script, between WoW windows. It sends nothing to the game; WoWBoxer never sends keys or clicks." />
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Theme="{StaticResource Hyperlink}" Command="{Binding OpenGuideCommand}" FontSize="12" Content="Guide" />
+                                    <TextBlock Text=" · " FontSize="12" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" />
+                                    <Button Theme="{StaticResource Hyperlink}" Command="{Binding OpenRulesCommand}" FontSize="12" Content="Rules on the website" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding TurnOffOnExit}" AutomationProperties.AutomationId="HoverOffOnExit"><TextBlock Text="Turn hover to activate off when WoWBoxer quits" /></CheckBox>
+                        <TextBlock Theme="{StaticResource Explain}" Text="On by default: closing the app (the window's ✕, Quit in the tray, or logging out) turns it off; it stays off at the next start. Off: it is on again when WoWBoxer starts. The delay stays for next time." />
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Shortcuts" />
+                        <Button Content="Create a desktop shortcut for this layout" Click="OnCreateShortcut" HorizontalAlignment="Left" Margin="0,12,0,0"
+                                ToolTip.Tip="One click: opens the app in the tray with this layout and opens the missing clients" />
+                        <TextBlock Theme="{StaticResource Explain}" Text="The shortcut starts the app in the tray with the layout you have open now and opens the missing WoW clients' login screens." />
+                    </StackPanel>
+                </ContentControl>
+
+                <!-- Linux: no update check (the system deploys updates) and no network calls -->
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0" AutomationProperties.AutomationId="UpdatesPanel">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Updates and privacy" />
+                        <TextBlock Theme="{StaticResource Explain}" Text="Updates come with your system (NixOS deploy)." AutomationProperties.AutomationId="UpdatesLine" />
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0" AutomationProperties.AutomationId="ExperimentalPanel">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Experimental" />
+                        <TextBlock Theme="{StaticResource Explain}" Text="New features that could still misbehave arrive here first, switched off. Turn one on to try it; if it causes trouble, turn it off again – no update needed." />
+                        <ItemsControl ItemsSource="{Binding ExperimentalSwitches}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ExperimentalSwitch">
+                                    <StackPanel>
+                                        <CheckBox Theme="{StaticResource Setting}" IsChecked="{Binding IsOn}" AutomationProperties.Name="{Binding Title}"><TextBlock Text="{Binding Title}" /></CheckBox>
+                                        <TextBlock Theme="{StaticResource Explain}" Text="{Binding Description}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Theme="{StaticResource Explain}" Margin="0,12,60,0" Text="Nothing to try right now." IsVisible="{Binding HasExperimental, Converter={x:Static app:BoolVisibility.Instance}, ConverterParameter=not}" />
+                    </StackPanel>
+                </ContentControl>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,804 @@
+<!--
+  "War Table" theme – the look of the WoWBoxer website mockup (03_Output/WoWBoxer-mockup/styles.css):
+  dark navy panels, gold trim, parchment headings, red/gold "Enter World" button, GameTooltip-style tooltips.
+  Everything here is our own vector styling. No Blizzard logos, art, icons or UI textures.
+  Heading font: Cinzel (SIL OFL 1.1, Assets/Fonts). Body: Inter (bundled, Avalonia.Fonts.Inter).
+  Ported from the WPF theme (src/WoWBoxer.Layouts.App/Themes/WarTable.xaml): every keyed WPF Style is a ControlTheme
+  with the same key (Theme="{StaticResource H2}"), every implicit WPF Style a ControlTheme keyed by its type, over
+  Fluent dark. WPF triggers are pseudo-class selectors; storyboards are transitions.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Styles.Resources>
+        <ResourceDictionary>
+            <!-- ===== Palette (mockup :root) ===== -->
+            <Color x:Key="NightColor">#0B0E14</Color>
+            <Color x:Key="Night2Color">#0F131C</Color>
+            <Color x:Key="PanelColor">#151A24</Color>
+            <Color x:Key="Panel2Color">#1C2333</Color>
+            <Color x:Key="Panel3Color">#232B3E</Color>
+            <Color x:Key="GoldColor">#C9A24A</Color>
+            <Color x:Key="GoldHiColor">#E8C66A</Color>
+            <Color x:Key="GoldLoColor">#8C6B26</Color>
+            <Color x:Key="ParchmentColor">#E9DFC4</Color>
+            <Color x:Key="TextColor">#D6CDB6</Color>
+            <Color x:Key="MutedColor">#A79F8A</Color>
+            <Color x:Key="UiGoldColor">#FFD100</Color>
+
+            <SolidColorBrush x:Key="NightBrush" Color="{StaticResource NightColor}" />
+            <SolidColorBrush x:Key="Night2Brush" Color="{StaticResource Night2Color}" />
+            <SolidColorBrush x:Key="PanelBrush" Color="{StaticResource PanelColor}" />
+            <SolidColorBrush x:Key="Panel2Brush" Color="{StaticResource Panel2Color}" />
+            <SolidColorBrush x:Key="Panel3Brush" Color="{StaticResource Panel3Color}" />
+            <SolidColorBrush x:Key="GoldBrush" Color="{StaticResource GoldColor}" />
+            <SolidColorBrush x:Key="GoldHiBrush" Color="{StaticResource GoldHiColor}" />
+            <SolidColorBrush x:Key="GoldLoBrush" Color="{StaticResource GoldLoColor}" />
+            <SolidColorBrush x:Key="ParchmentBrush" Color="{StaticResource ParchmentColor}" />
+            <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
+            <SolidColorBrush x:Key="MutedBrush" Color="{StaticResource MutedColor}" />
+            <SolidColorBrush x:Key="UiGoldBrush" Color="{StaticResource UiGoldColor}" />
+            <SolidColorBrush x:Key="LineBrush" Color="#52C9A24A" />
+            <SolidColorBrush x:Key="LineSoftBrush" Color="#29C9A24A" />
+            <SolidColorBrush x:Key="OkBrush" Color="#8CCB7A" />
+            <SolidColorBrush x:Key="WarnBrush" Color="#E6B455" />
+            <SolidColorBrush x:Key="NoBrush" Color="#E37A7E" />
+            <SolidColorBrush x:Key="FieldBrush" Color="#0D1018" />
+
+            <LinearGradientBrush x:Key="GoldGradient" StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#F7E3A6" Offset="0" />
+                <GradientStop Color="#C9A24A" Offset="0.55" />
+                <GradientStop Color="#8C6B26" Offset="1" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="GoldGlint" StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="#00E8C66A" Offset="0" />
+                <GradientStop Color="#B0E8C66A" Offset="0.5" />
+                <GradientStop Color="#00E8C66A" Offset="1" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="PanelGradient" StartPoint="0%,0%" EndPoint="60%,100%">
+                <GradientStop Color="#1E2536" Offset="0" />
+                <GradientStop Color="#151A24" Offset="0.55" />
+                <GradientStop Color="#11151E" Offset="1" />
+            </LinearGradientBrush>
+            <!-- War-table background: warm lamp light top right, cool light left, faint map grid. A fixed 2400×1600 picture
+                 from the top left, so the lights sit where they sit on the website, whatever the window size. -->
+            <DrawingBrush x:Key="WarTableBrush" Stretch="None" TileMode="None" AlignmentX="Left" AlignmentY="Top">
+                <DrawingBrush.Drawing><DrawingGroup>
+                    <GeometryDrawing Brush="#0B0E14" Geometry="M0,0 H2400 V1600 H0 Z" />
+                    <GeometryDrawing>
+                        <GeometryDrawing.Brush>
+                            <RadialGradientBrush Center="78%,0%" GradientOrigin="78%,0%" RadiusX="55%" RadiusY="70%">
+                                <GradientStop Color="#1FE8C66A" Offset="0" /><GradientStop Color="#00E8C66A" Offset="1" />
+                            </RadialGradientBrush>
+                        </GeometryDrawing.Brush>
+                        <GeometryDrawing.Geometry><RectangleGeometry Rect="0,0,2400,1600" /></GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing>
+                        <GeometryDrawing.Brush>
+                            <RadialGradientBrush Center="0%,35%" GradientOrigin="0%,35%" RadiusX="45%" RadiusY="55%">
+                                <GradientStop Color="#1A2A5BA8" Offset="0" /><GradientStop Color="#002A5BA8" Offset="1" />
+                            </RadialGradientBrush>
+                        </GeometryDrawing.Brush>
+                        <GeometryDrawing.Geometry><RectangleGeometry Rect="0,0,2400,1600" /></GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup></DrawingBrush.Drawing>
+            </DrawingBrush>
+            <DrawingBrush x:Key="MapGridBrush" TileMode="Tile" Stretch="None" SourceRect="0,0,64,64" DestinationRect="0,0,64,64">
+                <DrawingBrush.Drawing><DrawingGroup>
+                    <GeometryDrawing Brush="Transparent" Geometry="M0,0 H64 V64 H0 Z" />
+                    <GeometryDrawing Geometry="M0,0.5 H64 M0.5,0 V64">
+                        <GeometryDrawing.Pen><Pen Brush="#09C9A24A" Thickness="1" /></GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup></DrawingBrush.Drawing>
+            </DrawingBrush>
+
+            <!-- ===== Type ===== -->
+            <!-- One font file per key, so text without a FontWeight gets that face (WPF's "Cinzel Bold" family name) -->
+            <FontFamily x:Key="DisplayFont">avares://wowboxer/Assets/Fonts/Cinzel-Bold.ttf#Cinzel</FontFamily>
+            <FontFamily x:Key="DisplaySemiFont">avares://wowboxer/Assets/Fonts/Cinzel-SemiBold.ttf#Cinzel</FontFamily>
+            <FontFamily x:Key="BodyFont">fonts:Inter#Inter</FontFamily>
+            <FontFamily x:Key="MonoFont">Cascadia Mono, JetBrains Mono, DejaVu Sans Mono, Menlo, monospace</FontFamily>
+
+            <DropShadowEffect x:Key="HardTextShadow" OffsetX="0" OffsetY="1" BlurRadius="2" Color="Black" Opacity="0.95" />
+            <DropShadowEffect x:Key="PanelShadow" OffsetX="0" OffsetY="10" BlurRadius="28" Color="Black" Opacity="0.5" />
+
+            <ControlTheme x:Key="H1" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="Foreground" Value="{StaticResource ParchmentBrush}" />
+                <Setter Property="Effect" Value="{StaticResource HardTextShadow}" />
+            </ControlTheme>
+            <ControlTheme x:Key="H2" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Foreground" Value="{StaticResource UiGoldBrush}" />
+                <Setter Property="Effect" Value="{StaticResource HardTextShadow}" />
+            </ControlTheme>
+            <ControlTheme x:Key="StepLabel" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource DisplaySemiFont}" />
+                <Setter Property="FontSize" Value="12.5" />
+                <Setter Property="Foreground" Value="{StaticResource GoldBrush}" />
+            </ControlTheme>
+            <ControlTheme x:Key="Muted" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+                <Setter Property="FontSize" Value="12.5" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <!-- Inter sets its lines closer than Segoe UI (1.21 against 1.33 em): the notes get the difference back -->
+                <Setter Property="LineSpacing" Value="1.5" />
+            </ControlTheme>
+            <ControlTheme x:Key="Body" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="LineHeight" Value="21" />
+            </ControlTheme>
+
+            <!-- ===== Panels ===== -->
+            <ControlTheme x:Key="PanelBorder" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource PanelGradient}" />
+                <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="18" />
+            </ControlTheme>
+
+            <!-- A panel with four gold corner brackets (mockup .panel.ornate) -->
+            <ControlTheme x:Key="OrnatePanel" TargetType="ContentControl">
+                <Setter Property="Padding" Value="20" />
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel>
+                            <Border Theme="{StaticResource PanelBorder}" Padding="0" Effect="{StaticResource PanelShadow}" />
+                            <Border BorderBrush="#99000000" BorderThickness="1" CornerRadius="9" Margin="1" />
+                            <!-- corner brackets -->
+                            <Panel Margin="7" IsHitTestVisible="False" Opacity="0.85">
+                                <Path HorizontalAlignment="Left" VerticalAlignment="Top" Data="M0,16 L0,0 L16,0" Stroke="{StaticResource GoldBrush}" StrokeThickness="2" />
+                                <Path HorizontalAlignment="Right" VerticalAlignment="Top" Data="M0,0 L16,0 L16,16" Stroke="{StaticResource GoldBrush}" StrokeThickness="2" />
+                                <Path HorizontalAlignment="Left" VerticalAlignment="Bottom" Data="M0,0 L0,16 L16,16" Stroke="{StaticResource GoldBrush}" StrokeThickness="2" />
+                                <Path HorizontalAlignment="Right" VerticalAlignment="Bottom" Data="M16,0 L16,16 L0,16" Stroke="{StaticResource GoldBrush}" StrokeThickness="2" />
+                            </Panel>
+                            <ContentPresenter Name="PART_ContentPresenter" Margin="{TemplateBinding Padding}"
+                                              Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <!-- Ornamental divider: line – diamond – line -->
+            <ControlTheme x:Key="Divider" TargetType="ContentControl">
+                <Setter Property="Height" Value="12" />
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Grid Opacity="0.85" ColumnDefinitions="*,22,*">
+                            <Rectangle Height="1" VerticalAlignment="Center">
+                                <Rectangle.Fill><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%"><GradientStop Color="#00C9A24A" Offset="0" /><GradientStop Color="#C9A24A" Offset="1" /></LinearGradientBrush></Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle Grid.Column="1" Width="8" Height="8" Stroke="{StaticResource GoldBrush}" StrokeThickness="1" Fill="{StaticResource NightBrush}" RenderTransform="rotate(45deg)">
+                                <Rectangle.Effect><DropShadowEffect OffsetX="0" OffsetY="0" BlurRadius="10" Color="#E8C66A" Opacity="0.5" /></Rectangle.Effect>
+                            </Rectangle>
+                            <Rectangle Grid.Column="2" Height="1" VerticalAlignment="Center">
+                                <Rectangle.Fill><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%"><GradientStop Color="#C9A24A" Offset="0" /><GradientStop Color="#00C9A24A" Offset="1" /></LinearGradientBrush></Rectangle.Fill>
+                            </Rectangle>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <!-- ===== Focus ===== -->
+            <FocusAdornerTemplate x:Key="GoldFocus">
+                <Border Margin="-3" BorderBrush="{StaticResource GoldHiBrush}" BorderThickness="1.5" CornerRadius="5" />
+            </FocusAdornerTemplate>
+
+            <!-- ===== Buttons ===== -->
+            <!-- Default: the dark in-game panel button (mockup .btn-ghost) with a gold hover glow -->
+            <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
+                <Setter Property="Foreground" Value="{StaticResource UiGoldBrush}" />
+                <Setter Property="FontFamily" Value="{StaticResource DisplaySemiFont}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="Padding" Value="14,7" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel Name="Root">
+                            <Border Name="Glow" CornerRadius="5" Background="#01000000" Margin="1" Opacity="0">
+                                <Border.Effect><DropShadowEffect OffsetX="0" OffsetY="0" BlurRadius="16" Color="#E8C66A" Opacity="0.45" /></Border.Effect>
+                                <Border.Transitions><Transitions><DoubleTransition Property="Opacity" Duration="0:0:0.15" /></Transitions></Border.Transitions>
+                            </Border>
+                            <Border Name="Body" CornerRadius="4" BorderThickness="1.5" BorderBrush="#6B5422">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                        <GradientStop Color="#2A2F3C" Offset="0" /><GradientStop Color="#171A22" Offset="0.5" /><GradientStop Color="#0D0F15" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="3" Margin="1.5" BorderThickness="1" BorderBrush="#12FFFFFF" />
+                            <ContentPresenter Name="PART_ContentPresenter" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                              Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Effect="{StaticResource HardTextShadow}" />
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Foreground" Value="#FFE45C" />
+                    <Style Selector="^ /template/ Border#Body"><Setter Property="BorderBrush" Value="{StaticResource GoldBrush}" /></Style>
+                    <Style Selector="^ /template/ Border#Glow"><Setter Property="Opacity" Value="1" /></Style>
+                </Style>
+                <Style Selector="^:pressed /template/ Panel#Root"><Setter Property="RenderTransform" Value="translateY(1px)" /></Style>
+                <Style Selector="^:disabled /template/ Panel#Root"><Setter Property="Opacity" Value="0.4" /></Style>
+            </ControlTheme>
+
+            <!-- The big red/gold call to action (mockup .btn-primary, the in-game "Enter World" feel) -->
+            <ControlTheme x:Key="EnterWorldButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+                <Setter Property="FontSize" Value="19" />
+                <Setter Property="Padding" Value="28,14" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel Name="Root">
+                            <Border CornerRadius="6" Background="Black" Margin="-1" />
+                            <Border Name="Halo" CornerRadius="6" BorderThickness="3" BorderBrush="#8C8C6B26" Margin="-3">
+                                <Border.Effect><DropShadowEffect OffsetX="0" OffsetY="0" BlurRadius="26" Color="#FF5A28" Opacity="0.15" /></Border.Effect>
+                                <Border.Transitions><Transitions><EffectTransition Property="Effect" Duration="0:0:0.2" /></Transitions></Border.Transitions>
+                            </Border>
+                            <Border Name="Body" CornerRadius="5" BorderThickness="2" BorderBrush="{StaticResource GoldBrush}">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                        <GradientStop Color="#B3201A" Offset="0" /><GradientStop Color="#8A140F" Offset="0.5" /><GradientStop Color="#4E0806" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <!-- gloss on the upper half -->
+                            <Grid RowDefinitions="*,*">
+                                <Border CornerRadius="4,4,0,0" Margin="2,2,2,0">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"><GradientStop Color="#33FFFFFF" Offset="0" /><GradientStop Color="#08FFFFFF" Offset="1" /></LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                            </Grid>
+                            <Border CornerRadius="4" Margin="2" BorderThickness="1" BorderBrush="#4DFFE196" />
+                            <ContentPresenter Name="PART_ContentPresenter" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                              Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{StaticResource HardTextShadow}" />
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Foreground" Value="#FFE45C" />
+                    <Style Selector="^ /template/ Border#Halo">
+                        <Setter Property="BorderBrush" Value="#B3E8C66A" />
+                        <Setter Property="Effect"><DropShadowEffect OffsetX="0" OffsetY="0" BlurRadius="26" Color="#FF5A28" Opacity="0.6" /></Setter>
+                    </Style>
+                    <Style Selector="^ /template/ Panel#Root"><Setter Property="RenderTransform" Value="translateY(-1px)" /></Style>
+                </Style>
+                <Style Selector="^:pressed /template/ Panel#Root"><Setter Property="RenderTransform" Value="translateY(1px)" /></Style>
+                <Style Selector="^:disabled /template/ Panel#Root"><Setter Property="Opacity" Value="0.45" /></Style>
+            </ControlTheme>
+
+            <!-- Quiet text button (links, toolbar actions) -->
+            <ControlTheme x:Key="LinkButton" TargetType="Button">
+                <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Padding" Value="1" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover"><Setter Property="Foreground" Value="#F5DC93" /></Style>
+                <Style Selector="^:disabled"><Setter Property="Opacity" Value="0.4" /></Style>
+            </ControlTheme>
+
+            <!-- A link inside running text (WPF's Hyperlink): the LinkButton, underlined while the mouse is on it -->
+            <ControlTheme x:Key="Hyperlink" TargetType="Button" BasedOn="{StaticResource LinkButton}">
+                <Setter Property="Padding" Value="0" />
+                <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="TextBlock.TextDecorations" Value="Underline" /></Style>
+            </ControlTheme>
+
+            <!-- Title-bar caption buttons -->
+            <ControlTheme x:Key="CaptionButton" TargetType="Button">
+                <Setter Property="Width" Value="46" />
+                <Setter Property="Height" Value="36" />
+                <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Name="Bg" Background="{TemplateBinding Background}">
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Background" Value="#1FC9A24A" />
+                    <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                </Style>
+            </ControlTheme>
+            <ControlTheme x:Key="CloseCaptionButton" TargetType="Button" BasedOn="{StaticResource CaptionButton}">
+                <Style Selector="^:pointerover">
+                    <Setter Property="Background" Value="#B3201A" />
+                    <Setter Property="Foreground" Value="White" />
+                </Style>
+            </ControlTheme>
+
+            <!-- ===== Navigation tabs (mockup .nav: Cinzel caps, gold diamond under the current page) ===== -->
+            <ControlTheme x:Key="NavTab" TargetType="RadioButton">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+                <Setter Property="FontSize" Value="13.5" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel Background="Transparent" Margin="2,0">
+                            <Border Name="Hover" CornerRadius="4" Background="#12C9A24A" Opacity="0" Margin="0,6" />
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Margin="16,0" VerticalAlignment="Center" Effect="{StaticResource HardTextShadow}" />
+                            <Rectangle Name="Diamond" Width="7" Height="7" Fill="{StaticResource GoldHiBrush}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,3"
+                                       RenderTransform="rotate(45deg)" Opacity="0">
+                                <Rectangle.Effect><DropShadowEffect OffsetX="0" OffsetY="0" BlurRadius="8" Color="#E8C66A" Opacity="0.9" /></Rectangle.Effect>
+                                <Rectangle.Transitions><Transitions><DoubleTransition Property="Opacity" Duration="0:0:0.2" /></Transitions></Rectangle.Transitions>
+                            </Rectangle>
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                    <Style Selector="^ /template/ Border#Hover"><Setter Property="Opacity" Value="1" /></Style>
+                </Style>
+                <Style Selector="^:checked">
+                    <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                    <Style Selector="^ /template/ Rectangle#Diamond"><Setter Property="Opacity" Value="1" /></Style>
+                </Style>
+            </ControlTheme>
+
+            <!-- ===== Segmented choice (squad size, game) – mockup .seg ===== -->
+            <ControlTheme x:Key="SegButton" TargetType="RadioButton">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="MinWidth" Value="44" />
+                <Setter Property="Height" Value="44" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel Margin="0,0,6,0">
+                            <Border Name="Body" CornerRadius="5" BorderThickness="1.5" BorderBrush="#3A4560" Background="#121722">
+                                <Border.Effect><DropShadowEffect OffsetX="0" OffsetY="0" BlurRadius="14" Color="#E8C66A" Opacity="0" /></Border.Effect>
+                                <Border.Transitions><Transitions><EffectTransition Property="Effect" Duration="0:0:0.2" /></Transitions></Border.Transitions>
+                            </Border>
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" Margin="12,0" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{StaticResource HardTextShadow}" />
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                    <Style Selector="^ /template/ Border#Body"><Setter Property="BorderBrush" Value="{StaticResource GoldLoBrush}" /></Style>
+                </Style>
+                <Style Selector="^:checked">
+                    <Setter Property="Foreground" Value="{StaticResource UiGoldBrush}" />
+                    <Style Selector="^ /template/ Border#Body">
+                        <Setter Property="BorderBrush" Value="{StaticResource GoldHiBrush}" />
+                        <Setter Property="Background">
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"><GradientStop Color="#3A2E14" Offset="0" /><GradientStop Color="#1C170C" Offset="1" /></LinearGradientBrush>
+                        </Setter>
+                        <Setter Property="Effect"><DropShadowEffect OffsetX="0" OffsetY="0" BlurRadius="14" Color="#E8C66A" Opacity="0.55" /></Setter>
+                    </Style>
+                </Style>
+            </ControlTheme>
+            <ControlTheme x:Key="SmallSegButton" TargetType="RadioButton" BasedOn="{StaticResource SegButton}">
+                <Setter Property="FontSize" Value="12.5" />
+                <Setter Property="Height" Value="34" />
+                <Setter Property="FontFamily" Value="{StaticResource DisplaySemiFont}" />
+            </ControlTheme>
+
+            <!-- ===== CheckBox (gold box) and Switch ===== -->
+            <ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Border Name="Box" Width="18" Height="18" CornerRadius="3" BorderThickness="1.5" BorderBrush="#6B5422" Background="{StaticResource FieldBrush}" VerticalAlignment="Center">
+                                <Path Name="Mark" Data="M3.5,9 L7.5,13 L14.5,4.5" Stroke="{StaticResource UiGoldBrush}" StrokeThickness="2.2" StrokeLineCap="Round" Opacity="0" Margin="-1.5" />
+                            </Border>
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="9,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover /template/ Border#Box"><Setter Property="BorderBrush" Value="{StaticResource GoldBrush}" /></Style>
+                <Style Selector="^:checked">
+                    <Style Selector="^ /template/ Path#Mark"><Setter Property="Opacity" Value="1" /></Style>
+                    <Style Selector="^ /template/ Border#Box"><Setter Property="BorderBrush" Value="{StaticResource GoldBrush}" /></Style>
+                </Style>
+                <Style Selector="^:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+            </ControlTheme>
+            <ControlTheme x:Key="Switch" TargetType="CheckBox">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <DockPanel Background="Transparent" LastChildFill="True">
+                            <Panel DockPanel.Dock="Right" Width="42" Height="22" Margin="12,0,0,0" VerticalAlignment="Center">
+                                <Border Name="Track" CornerRadius="11" Background="#121722" BorderBrush="#3A4560" BorderThickness="1.5" />
+                                <Ellipse Name="Knob" Width="14" Height="14" Fill="{StaticResource MutedBrush}" HorizontalAlignment="Left" Margin="4,0,0,0" RenderTransform="translateX(0px)">
+                                    <Ellipse.Transitions>
+                                        <Transitions><TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="QuadraticEaseInOut" /></Transitions>
+                                    </Ellipse.Transitions>
+                                </Ellipse>
+                            </Panel>
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:checked">
+                    <Style Selector="^ /template/ Border#Track">
+                        <Setter Property="Background" Value="#3A2E14" />
+                        <Setter Property="BorderBrush" Value="{StaticResource GoldBrush}" />
+                    </Style>
+                    <Style Selector="^ /template/ Ellipse#Knob">
+                        <Setter Property="Fill" Value="{StaticResource UiGoldBrush}" />
+                        <Setter Property="RenderTransform" Value="translateX(20px)" />
+                    </Style>
+                </Style>
+                <Style Selector="^:pointerover /template/ Border#Track"><Setter Property="BorderBrush" Value="{StaticResource GoldHiBrush}" /></Style>
+                <Style Selector="^:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+            </ControlTheme>
+
+            <!-- ===== Text input ===== -->
+            <ControlTheme x:Key="{x:Type TextBox}" TargetType="TextBox">
+                <Setter Property="Foreground" Value="{StaticResource ParchmentBrush}" />
+                <Setter Property="Background" Value="{StaticResource FieldBrush}" />
+                <Setter Property="BorderBrush" Value="#3A4560" />
+                <Setter Property="BorderThickness" Value="1.5" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="CaretBrush" Value="{StaticResource GoldHiBrush}" />
+                <Setter Property="SelectionBrush" Value="{StaticResource GoldBrush}" />
+                <Setter Property="SelectionForegroundBrush" Value="{StaticResource NightBrush}" />
+                <Setter Property="Padding" Value="8,0" />
+                <Setter Property="MinHeight" Value="34" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="13.5" />
+                <Setter Property="FocusAdorner" Value="{x:Null}" />
+                <Setter Property="ContextFlyout" Value="{x:Null}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Name="PART_BorderElement" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}">
+                            <ScrollViewer Name="PART_ScrollViewer" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                                <!-- WPF's text view sits a few pixels in from the padding -->
+                                <Panel Margin="6,0,2,0">
+                                    <TextBlock Name="PART_Placeholder" Foreground="{TemplateBinding PlaceholderForeground}" Text="{TemplateBinding PlaceholderText}"
+                                               IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                                    <TextPresenter Name="PART_TextPresenter"
+                                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                   CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                                   TextWrapping="{TemplateBinding TextWrapping}"
+                                                   LineHeight="{TemplateBinding LineHeight}"
+                                                   PasswordChar="{TemplateBinding PasswordChar}"
+                                                   RevealPassword="{TemplateBinding RevealPassword}"
+                                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                   CaretBrush="{TemplateBinding CaretBrush}"
+                                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                </Panel>
+                                <ScrollViewer.Styles>
+                                    <Style Selector="ScrollContentPresenter#PART_ContentPresenter"><Setter Property="Cursor" Value="IBeam" /></Style>
+                                </ScrollViewer.Styles>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover"><Setter Property="BorderBrush" Value="{StaticResource GoldLoBrush}" /></Style>
+                <Style Selector="^:focus"><Setter Property="BorderBrush" Value="{StaticResource GoldHiBrush}" /></Style>
+                <Style Selector="^:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+            </ControlTheme>
+
+            <!-- ===== ComboBox ===== -->
+            <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
+                <Setter Property="Foreground" Value="{StaticResource ParchmentBrush}" />
+                <Setter Property="Background" Value="{StaticResource FieldBrush}" />
+                <Setter Property="BorderBrush" Value="#3A4560" />
+                <Setter Property="BorderThickness" Value="1.5" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="FontSize" Value="13.5" />
+                <Setter Property="MinHeight" Value="34" />
+                <Setter Property="MaxDropDownHeight" Value="360" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel>
+                            <Border Name="Background" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}" />
+                            <Path HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Data="M0,0 L5,5 L10,0" Stroke="{StaticResource GoldBrush}" StrokeThickness="1.8" IsHitTestVisible="False" />
+                            <!-- a fixed margin, as upstream's template (it ignores Padding) -->
+                            <ContentControl Name="ContentPresenter" Margin="10,0,30,0" IsHitTestVisible="False"
+                                            Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            <Popup Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}" Placement="Bottom" PlacementTarget="Background"
+                                   IsLightDismissEnabled="True" WindowManagerAddShadowHint="False" InheritsTransform="True"
+                                   MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border Margin="0,4,8,8" CornerRadius="6" BorderThickness="1" BorderBrush="{StaticResource GoldLoBrush}" Background="#F00C0F1A">
+                                    <Border.Effect><DropShadowEffect OffsetX="0" OffsetY="6" BlurRadius="16" Opacity="0.6" /></Border.Effect>
+                                    <ScrollViewer Margin="4" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" IsScrollChainingEnabled="False">
+                                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover /template/ Border#Background"><Setter Property="BorderBrush" Value="{StaticResource GoldLoBrush}" /></Style>
+                <Style Selector="^:dropdownopen /template/ Border#Background"><Setter Property="BorderBrush" Value="{StaticResource GoldHiBrush}" /></Style>
+                <Style Selector="^:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+            </ControlTheme>
+            <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="ComboBoxItem">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Padding" Value="10,7" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Name="Bg" CornerRadius="4" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:selected"><Setter Property="Foreground" Value="{StaticResource UiGoldBrush}" /></Style>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Background" Value="#26C9A24A" />
+                    <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                </Style>
+                <Style Selector="^:focus-visible">
+                    <Setter Property="Background" Value="#26C9A24A" />
+                    <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                </Style>
+            </ControlTheme>
+
+            <!-- ===== Lists ===== -->
+            <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer Name="PART_ScrollViewer"
+                                          HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                                          VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
+                                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" Margin="{TemplateBinding Padding}" />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+            <ControlTheme x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
+                <Setter Property="Padding" Value="8,5" />
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Name="Bg" CornerRadius="4" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover"><Setter Property="Background" Value="#14C9A24A" /></Style>
+                <Style Selector="^:selected">
+                    <Setter Property="Background" Value="#24C9A24A" />
+                    <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+                </Style>
+            </ControlTheme>
+
+            <!-- ===== Scrollbars: thin gold thumb, beside the content (not over it) ===== -->
+            <ControlTheme x:Key="ThumbStyle" TargetType="Thumb">
+                <Setter Property="Background" Value="#55C9A24A" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border CornerRadius="3" Background="{TemplateBinding Background}" />
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover"><Setter Property="Background" Value="#99C9A24A" /></Style>
+            </ControlTheme>
+            <ControlTheme x:Key="ScrollPageButton" TargetType="RepeatButton">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Template">
+                    <ControlTemplate><Border Background="Transparent" /></ControlTemplate>
+                </Setter>
+            </ControlTheme>
+            <ControlTheme x:Key="{x:Type ScrollBar}" TargetType="ScrollBar">
+                <Setter Property="AllowAutoHide" Value="False" />
+                <Style Selector="^:vertical">
+                    <Setter Property="Width" Value="8" />
+                    <Setter Property="MinWidth" Value="8" />
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <Track Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}" Value="{TemplateBinding Value, Mode=TwoWay}"
+                                   ViewportSize="{TemplateBinding ViewportSize}" Orientation="Vertical" IsDirectionReversed="True" Margin="1,2">
+                                <Track.DecreaseButton><RepeatButton Name="PART_PageUpButton" Theme="{StaticResource ScrollPageButton}" /></Track.DecreaseButton>
+                                <Track.IncreaseButton><RepeatButton Name="PART_PageDownButton" Theme="{StaticResource ScrollPageButton}" /></Track.IncreaseButton>
+                                <Thumb Theme="{StaticResource ThumbStyle}" />
+                            </Track>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+                <Style Selector="^:horizontal">
+                    <Setter Property="Height" Value="8" />
+                    <Setter Property="MinHeight" Value="8" />
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <Track Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}" Value="{TemplateBinding Value, Mode=TwoWay}"
+                                   ViewportSize="{TemplateBinding ViewportSize}" Orientation="Horizontal" Margin="2,1">
+                                <Track.DecreaseButton><RepeatButton Name="PART_PageUpButton" Theme="{StaticResource ScrollPageButton}" /></Track.DecreaseButton>
+                                <Track.IncreaseButton><RepeatButton Name="PART_PageDownButton" Theme="{StaticResource ScrollPageButton}" /></Track.IncreaseButton>
+                                <Thumb Theme="{StaticResource ThumbStyle}" />
+                            </Track>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+            </ControlTheme>
+            <ControlTheme x:Key="{x:Type ScrollViewer}" TargetType="ScrollViewer">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="AllowAutoHide" Value="False" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
+                            <ScrollContentPresenter Name="PART_ContentPresenter" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"
+                                                    HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}" VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
+                                                    HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}" VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}" />
+                            <ScrollBar Name="PART_HorizontalScrollBar" Orientation="Horizontal" Grid.Row="1" />
+                            <ScrollBar Name="PART_VerticalScrollBar" Orientation="Vertical" Grid.Column="1" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <!-- ===== Slider: gold fill, round knob; Ticks mark special values (e.g. the recommended one) above the track ===== -->
+            <ControlTheme x:Key="SliderPart" TargetType="RepeatButton">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Background="Transparent"><Border Height="4" CornerRadius="2" Background="{TemplateBinding Background}" /></Border>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+            <ControlTheme x:Key="SliderKnob" TargetType="Thumb">
+                <Setter Property="Background" Value="{StaticResource UiGoldBrush}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Ellipse Fill="{TemplateBinding Background}" Stroke="#3A2E14" StrokeThickness="2" />
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:pointerover"><Setter Property="Background" Value="{StaticResource GoldHiBrush}" /></Style>
+            </ControlTheme>
+            <ControlTheme x:Key="{x:Type Slider}" TargetType="Slider">
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="FocusAdorner" Value="{StaticResource GoldFocus}" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Grid Background="Transparent" MinHeight="26" RowDefinitions="6,*">
+                            <TickBar Fill="{StaticResource GoldHiBrush}" Placement="Top" Height="5" VerticalAlignment="Bottom" Orientation="Horizontal"
+                                     Ticks="{TemplateBinding Ticks}" Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}"
+                                     ReservedSpace="{Binding #PART_Track.Thumb.Bounds}" />
+                            <Track Name="PART_Track" Grid.Row="1" Orientation="Horizontal" Minimum="{TemplateBinding Minimum}" Maximum="{TemplateBinding Maximum}"
+                                   Value="{TemplateBinding Value, Mode=TwoWay}">
+                                <Track.DecreaseButton><RepeatButton Name="PART_DecreaseButton" Theme="{StaticResource SliderPart}" Background="{StaticResource GoldBrush}" /></Track.DecreaseButton>
+                                <Track.IncreaseButton><RepeatButton Name="PART_IncreaseButton" Theme="{StaticResource SliderPart}" Background="#3A4560" /></Track.IncreaseButton>
+                                <Thumb Width="16" Height="16" Theme="{StaticResource SliderKnob}" />
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+            </ControlTheme>
+
+            <!-- ===== Tooltips: the in-game GameTooltip look ===== -->
+            <ControlTheme x:Key="{x:Type ToolTip}" TargetType="ToolTip">
+                <Setter Property="Foreground" Value="#E4E4E4" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="MaxWidth" Value="370" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Name="PART_LayoutRoot" Margin="0,0,10,10" CornerRadius="5" BorderThickness="1" BorderBrush="#8E8E8E" Padding="10,7">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"><GradientStop Color="#F70C0F1E" Offset="0" /><GradientStop Color="#F7060812" Offset="1" /></LinearGradientBrush>
+                            </Border.Background>
+                            <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" TextBlock.TextWrapping="Wrap" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <!-- ===== Context menu (tray-like menus in the app) ===== -->
+            <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="WindowManagerAddShadowHint" Value="False" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border CornerRadius="6" BorderThickness="1" BorderBrush="{StaticResource GoldLoBrush}" Background="#F70C0F1A" Padding="4" Margin="0,0,8,8">
+                            <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" KeyboardNavigation.TabNavigation="Continue" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+            <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Border Name="Bg" CornerRadius="4" Padding="12,7" Background="{TemplateBinding Background}">
+                            <ContentPresenter Name="PART_HeaderPresenter" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" RecognizesAccessKey="True" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+                <Style Selector="^:selected">
+                    <Setter Property="Background" Value="#26C9A24A" />
+                    <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                </Style>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Background" Value="#26C9A24A" />
+                    <Setter Property="Foreground" Value="{StaticResource GoldHiBrush}" />
+                </Style>
+                <Style Selector="^:disabled"><Setter Property="Opacity" Value="0.45" /></Style>
+            </ControlTheme>
+            <ControlTheme x:Key="{x:Type Separator}" TargetType="Separator">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Margin" Value="8,4" />
+                <Setter Property="Height" Value="1" />
+                <Setter Property="Background" Value="{StaticResource LineBrush}" />
+                <Setter Property="Template">
+                    <ControlTemplate><Border Background="{TemplateBinding Background}" /></ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <!-- WoW tooltip-style box (Setup and Settings) -->
+            <ControlTheme x:Key="TipBox" TargetType="Border">
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="#8E8E8E" />
+                <Setter Property="Padding" Value="10,7" />
+                <Setter Property="Background">
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"><GradientStop Color="#0C0F1E" Offset="0" /><GradientStop Color="#060812" Offset="1" /></LinearGradientBrush>
+                </Setter>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Styles.Resources>
+</Styles>

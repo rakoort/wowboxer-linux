@@ -1,0 +1,76 @@
+<UserControl x:Class="WoWBoxer.Layouts.App.Views.HelpView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="using:WoWBoxer.Layouts.App.Views"
+             xmlns:vm="using:WoWBoxer.Layouts.App.ViewModels"
+             x:DataType="vm:MainViewModel">
+    <!-- Help: everything for when something goes wrong, in one place. Left: ask for help (Report a problem, Discord,
+         YouTube, website) and the tools that show what the app sees. Right: common problems with their fixes. -->
+    <UserControl.Resources>
+        <ControlTheme x:Key="Explain" TargetType="TextBlock" BasedOn="{StaticResource Muted}">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </ControlTheme>
+    </UserControl.Resources>
+    <Grid ColumnDefinitions="5*,16,7*">
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="Get help" />
+                        <TextBlock Theme="{StaticResource Explain}" Margin="0,8,0,0"
+                                   Text="Ask in #setup-help on the WoWBoxer Discord. Report a problem builds a short report of what the app sees – with your user name, WoW account and character names hidden. You see all of it first, and paste it yourself." />
+                        <Button Theme="{StaticResource EnterWorldButton}" Command="{Binding ReportProblemCommand}" HorizontalAlignment="Left" Margin="0,16,0,0" Padding="22,8"
+                                AutomationProperties.AutomationId="ReportProblem" AutomationProperties.Name="Report a problem"
+                                ToolTip.Tip="Shows the report, copies it as one Discord message and opens #setup-help. Nothing is posted for you.">
+                            <TextBlock Text="REPORT A PROBLEM" />
+                        </Button>
+                        <TextBlock Theme="{StaticResource Body}" Margin="0,22,0,8" Text="Join the WoWBoxer Discord – tips, layouts and help." />
+                        <v:CommunityBar HorizontalAlignment="Left" IconSize="22" ShowLabels="True" />
+                    </StackPanel>
+                </ContentControl>
+
+                <ContentControl Theme="{StaticResource OrnatePanel}" Padding="24,20" Margin="0,16,0,0">
+                    <StackPanel>
+                        <TextBlock Theme="{StaticResource H2}" Text="See what the app sees" />
+                        <WrapPanel Margin="0,12,0,0">
+                            <Button Content="Identify all windows" Command="{Binding IdentifyCommand}" Margin="0,0,8,8" ToolTip.Tip="Show each window's number on top of it for a few seconds (Ctrl+I)" />
+                            <Button Content="Diagnose" Command="{Binding DiagnoseCommand}" Margin="0,0,8,8"
+                                    ToolTip.Tip="Writes a full report (monitors, windows, Wine prefixes, KWin, WoW display settings) and tries one placement per window" />
+                            <Button Content="Open logs" Command="{Binding OpenLogsCommand}" Margin="0,0,8,8" ToolTip.Tip="The activity log and saved reports (stay on your PC)" />
+                            <Button Content="Give title bars back" Command="{Binding RestoreFramesCommand}" Margin="0,0,8,8"
+                                    ToolTip.Tip="Undo &quot;Remove title bars&quot; on every open WoW window" />
+                        </WrapPanel>
+                        <TextBlock Theme="{StaticResource Explain}"
+                                   Text="Diagnose writes a longer report file and moves each window once to test it. Logs and reports stay on your PC, with your user name hidden. The Activity line at the bottom shows the latest messages." />
+                    </StackPanel>
+                </ContentControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <ContentControl Grid.Column="2" Theme="{StaticResource OrnatePanel}" Padding="24,20">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Theme="{StaticResource H2}" Text="Common problems" />
+                <TextBlock DockPanel.Dock="Top" Theme="{StaticResource Explain}" Margin="0,6,0,8" Text="What you see, and what to do. More in the Guide tab." />
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{x:Static vm:HelpTopics.All}" AutomationProperties.AutomationId="HelpTopics">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:HelpTopic">
+                                <Border Margin="0,0,8,10" Padding="14,10" CornerRadius="6" BorderBrush="#2E3850" BorderThickness="1">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%"><GradientStop Color="#1C2333" Offset="0" /><GradientStop Color="#121722" Offset="1" /></LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Problem}" FontFamily="{StaticResource DisplayFont}" FontSize="13" Foreground="{StaticResource UiGoldBrush}" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding Fix}" Margin="0,4,0,0" FontSize="13" Foreground="{StaticResource TextBrush}" TextWrapping="Wrap" LineHeight="18" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </ContentControl>
+    </Grid>
+</UserControl>

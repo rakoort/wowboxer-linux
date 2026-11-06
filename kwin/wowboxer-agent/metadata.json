@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Id": "wowboxer-agent",
+        "Name": "WoWBoxer agent",
+        "Description": "Places World of Warcraft windows for the WoWBoxer app. It only moves, resizes and restyles windows.",
+        "License": "MIT",
+        "Version": "1.0.0",
+        "EnabledByDefault": false
+    },
+    "KPackageStructure": "KWin/Script",
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js"
+}

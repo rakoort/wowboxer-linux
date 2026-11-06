@@ -15,14 +15,32 @@
     <PackageReference Include="Avalonia" Version="12.1.5" />
     <PackageReference Include="Avalonia.Desktop" Version="12.1.5" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.5" />
+    <!-- The body font, bundled: Linux desktops and the screenshot run look the same. -->
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.5" />
   </ItemGroup>
+
+  <!-- "WoWBoxer Dev" (dotnet build -p:WbxDev=true): own settings folder, single-instance name and DEV badge (AppFlavor.cs). -->
+  <PropertyGroup Condition="'$(WbxDev)' == 'true'">
+    <DefineConstants>$(DefineConstants);WBX_DEV</DefineConstants>
+    <AssemblyTitle>WoWBoxer Dev</AssemblyTitle>
+  </PropertyGroup>
 
   <!-- The upstream app's fonts and icons, used in place (one copy in the repo). -->
   <ItemGroup>
     <AvaloniaResource Include="..\WoWBoxer.Layouts.App\Assets\Fonts\*.ttf" Link="Assets\Fonts\%(Filename)%(Extension)" />
-    <AvaloniaResource Include="..\WoWBoxer.Layouts.App\Assets\app.png" Link="Assets\app.png" />
     <AvaloniaResource Include="..\WoWBoxer.Layouts.App\Assets\splash.png" Link="Assets\splash.png" />
     <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(WbxDev)' != 'true'">
+    <AvaloniaResource Include="..\WoWBoxer.Layouts.App\Assets\app.png" Link="Assets\app.png" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(WbxDev)' == 'true'">
+    <AvaloniaResource Include="..\WoWBoxer.Layouts.App\Assets\dev\app.png" Link="Assets\app.png" />
+  </ItemGroup>
+
+  <!-- The KWin script ships next to the app: <app dir>/kwin/wowboxer-agent/… (the backend loads it into KWin). -->
+  <ItemGroup>
+    <None Include="..\..\kwin\wowboxer-agent\**" Link="kwin\wowboxer-agent\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
